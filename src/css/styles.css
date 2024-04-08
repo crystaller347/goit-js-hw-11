@@ -1,128 +1,176 @@
-@import 'node_modules/modern-normalize/modern-normalize.css';
+/**
+  |============================
+  | include css partials with
+  | default @import url()
+  |============================
+*/
+@import url('./reset.css');
+@import url('./vite-promo.css');
+@import url('./header.css');
 
-body {
-  font-family: 'Montserrat', sans-serif;
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
-  font-weight: 400;
   line-height: 24px;
-  letter-spacing: 0.04em;
+  font-weight: 400;
 
-  color: #2e2f42;
-  background-color: #ffffff;
+  color: #242424;
+  background-color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --indent: 12px;
+  --items: 4;
+}
+
+.user_request_form {
+  display: flex;
+  justify-content: center;
+  gap: var(--indent);
+  margin: 12px auto;
+}
+
+::placeholder {
+  color: gray;
 }
 
 ul {
   list-style: none;
   padding: 0;
-  margin: 0;
-}
-
-.form {
-  margin-top: 36px;
-  text-align: center;
 }
 
 .gallery {
+  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  width: 1128px;
-  margin: auto;
-  margin-top: 32px;
-  gap: 24px;
-}
-
-.form-button {
-  width: 95px;
-  height: 40px;
-
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0.04em;
-
-  color: #ffffff;
-  background-color: #4e75ff;
-
-  padding: 8px 16px;
-  border-radius: 8px;
-}
-
-.form-button:hover {
-  background-color: #6c8cff;
-}
-
-.form-input {
-  width: 271px;
-  height: 40px;
-  padding: 8px 16px;
-
-  font: inherit;
-
-  border: 1px solid #808080;
-  border-radius: 4px;
-  outline: none;
+  justify-content: center;
+  align-items: stretch;
+  gap: var(--indent);
 }
 
 .gallery-item {
-  width: 360px;
-  border: 1px solid #808080;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  flex-basis: calc(
+    (100% - var(--indent) * (var(--items) - 1)) / var(--items) - 2px
+  );
+  object-fit: cover;
+  overflow: hidden;
+  background-color: #f6f4f4;
+  border: 1px solid #242424;
+  border-radius: 8px;
+  max-height: 400px;
 }
 
-.gallery-link {
-  font: inherit;
-  color: currentColor;
-  text-decoration: none;
-}
-
-.gallery-img {
+.gallery-item img {
   display: block;
   max-width: 100%;
 }
 
-.gallery-descript {
+.info-list {
   display: flex;
-  padding: 4px 20px;
   justify-content: space-between;
+  align-items: flex-end;
+  text-align: center;
+  justify-items: center;
+  padding: 8px;
 }
 
-.gallery-descript__item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.main-info {
+  font-size: 12px;
 }
 
-.gallery-descript__span {
-  font-weight: 600;
-  line-height: 16px;
+.info {
+  font-size: 12px;
+}
+
+input {
+  display: block;
+  min-width: 300px;
+  padding: 8px 16px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5em;
+  letter-spacing: 0.04em;
+}
+
+.btn {
+  max-width: fit-content;
+  padding: 8px 16px;
+  background-color: #4e75ff;
+  border-radius: 8px;
+  border-color: transparent;
+  font-size: inherit;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.btn:hover {
+  background-color: #6c8cff;
 }
 
 .loader {
+  visibility: hidden;
   width: 48px;
   height: 48px;
-  border: 5px solid #fff;
-  border-bottom-color: #ff3d00;
+  border: 3px dotted #fff;
+  border-style: solid solid dotted dotted;
   border-radius: 50%;
   display: inline-block;
+  position: relative;
   box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  animation: rotation 2s linear infinite;
+}
+#elem-to-center {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px dotted #ff8c00;
+  border-style: solid solid dotted;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  animation: rotationBack 4s linear infinite;
+  transform-origin: center center;
 }
 
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
-.is-hidden {
-  opacity: 0;
-  visibility: hidden;
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

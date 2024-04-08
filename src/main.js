@@ -1,48 +1,74 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+// Described in documentation
+import SimpleLightbox from "simplelightbox";
+// Additional import
+import "simplelightbox/dist/simple-lightbox.min.css";
 
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+// Described in documentation
+import iziToast from "izitoast";
+// Additional import
+import "izitoast/dist/css/iziToast.min.css";
 
-import { getImage } from './js/pixabay-api';
-import { imagesTemplate } from './js/render-functions';
+import { getImages } from "./js/pixabay-api";
+import { imagesRender } from  "./js/render-functions"
 
-const formEl = document.querySelector('.form');
-const listEL = document.querySelector('.gallery');
-const loaderEl = document.querySelector('.loader');
+const userRequestForm = document.querySelector(".user_request_form");
+const gallery = document.querySelector(".gallery");
+const loader = document.querySelector(".loader");
 
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
+userRequestForm.addEventListener("submit", onRequestSubmit);
 
-formEl.addEventListener('submit', event => {
+function onRequestSubmit(event) {
   event.preventDefault();
-  listEL.innerHTML = '';
-  const value = event.target.elements.value.value;
 
-  if (value) {
-    loaderEl.classList.remove('is-hidden');
-    getImage(value)
-      .then(data => {
-        if (!data.hits.length) {
-          iziToast.error({
-            title: 'Error',
-            message:
-              'Sorry, there are no images matching your search query. Please try again!',
-          });
-        }
-        const markup = imagesTemplate(data.hits);
-        listEL.insertAdjacentHTML('afterbegin', markup);
-        loaderEl.classList.add('is-hidden');
-        lightbox.refresh();
-      })
-      .catch(error => console.log(error));
-  } else {
+  loader.style.visibility = "visible";
+
+  const userRequestStr = event.target.elements.user_query.value.toLowerCase().trim().replaceAll(" ", "+");
+  if (!userRequestStr) {
     iziToast.error({
-      title: 'Error',
-      message: 'The search field is empty. Please try again!',
+      backgroundColor: "red",
+      icon: false,
+      progressBar: false,
+      close: false,
+      position: "topRight",
+      message: "Please, input a valid request!"
     });
+    return;
   }
-  formEl.reset();
-});
+  else {
+    getImages(userRequestStr).then(data => {
+      if (!data.hits.length) {
+      iziToast.error({
+      backgroundColor: "red",
+      icon: false,
+      progressBar: false,
+      close: false,
+      position: "topRight",
+      message: "There are no images matching Your request!"
+    });
+      }
+      else {
+      
+        gallery.innerHTML = imagesRender(data.hits);
+
+          const lightbox = new SimpleLightbox(".gallery-link", {
+          captionsData: "alt"
+        });
+        lightbox.refresh();
+      };
+    })
+      .catch(error => {
+      iziToast.error({
+      backgroundColor: "red",
+      icon: false,
+      progressBar: false,
+      close: false,
+      position: "topRight",
+      message: "Something went wrong during your request. Please, try again later!"
+    });
+    })
+      .finally(() => {
+        loader.style.visibility = "hidden";
+      })
+  };
+    event.target.reset();
+};
